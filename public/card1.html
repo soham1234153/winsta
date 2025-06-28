@@ -175,6 +175,21 @@
         .popup-content button:hover {
             background-color: #28a428;
         }
+
+        @media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .left, .right {
+        width: 100%;
+        aspect-ratio: auto;
+    }
+
+    .left img {
+        height: auto;
+    }
+}
     </style>
 </head>
 
