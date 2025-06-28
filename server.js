@@ -200,3 +200,14 @@ async function sendOtpSms(mobile, otp, name) {
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
+
+// ✅ Default Root Route
+app.get('/', (req, res) => {
+  res.send('✅ Welcome to Winsta Backend Server! APIs are working fine.');
+});
+
+// ✅ Start Server
+app.listen(PORT, () => {
+  console.log(`✅ Server running at http://localhost:${PORT}`);
+});
+
