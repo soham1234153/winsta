@@ -98,7 +98,7 @@
             const name = document.getElementById('name').value;
 
             if (actionType === 'login') {
-                fetch('http://localhost:3000/send-otp-login', {
+                fetch('https://winsta.onrender.com/send-otp-login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ mobile })
@@ -112,7 +112,7 @@
                         }
                     });
             } else if (actionType === 'register') {
-                fetch('http://localhost:3000/send-otp-register', {
+                fetch('https://winsta.onrender.com/send-otp-register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, mobile })
