@@ -229,7 +229,7 @@
                 return;
             }
 
-            fetch('http://localhost:3000/save-transaction', {
+            fetch('https://winsta.onrender.com/save-transaction', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, mobile, cardId, txnId })
