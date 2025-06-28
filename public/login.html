@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login / Register with OTP</title>
+    <style>
+        body {
+            background: #1c1c1c;
+            color: #FFD700;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input,
+        button {
+            width: 90%;
+            max-width: 300px;
+            padding: 12px;
+            margin: 10px auto;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+            display: block;
+        }
+
+        input {
+            background: #333;
+            color: #FFD700;
+        }
+
+        button {
+            background: #32CD32;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #28a428;
+        }
+
+        #step2,
+        #nameField {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <h2>Login / Register with OTP</h2>
+
+    <!-- Choose Login or Register -->
+    <div id="chooseOption">
+        <button onclick="showLogin()">Login</button>
+        <button onclick="showRegister()">Register</button>
+    </div>
+
+    <!-- Step 1: Enter Details -->
+    <div id="step1" style="display:none;">
+        <input type="text" id="name" placeholder="Enter Name (Only for Register)">
+        <input type="text" id="mobile" placeholder="Enter Mobile Number">
+        <button id="sendOtpBtn" onclick="sendOTP()">Send OTP</button>
+    </div>
+
+    <!-- Step 2: OTP -->
+    <div id="step2">
+        <input type="text" id="otp" placeholder="Enter OTP">
+        <button onclick="verifyOTP()">Verify OTP</button>
+    </div>
+
+    <p id="status"></p>
+
+    <script>
+        let actionType = ''; // 'login' or 'register'
+
+        function showLogin() {
+            actionType = 'login';
+            document.getElementById('chooseOption').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('name').style.display = 'none';
+        }
+
+        function showRegister() {
+            actionType = 'register';
+            document.getElementById('chooseOption').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('name').style.display = 'block';
+        }
+
+        function sendOTP() {
+            const mobile = document.getElementById('mobile').value;
+            const name = document.getElementById('name').value;
+
+            if (actionType === 'login') {
+                fetch('http://localhost:3000/send-otp-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mobile })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById('status').innerText = data.message;
+                        if (data.success) {
+                            document.getElementById('step1').style.display = 'none';
+                            document.getElementById('step2').style.display = 'block';
+                        }
+                    });
+            } else if (actionType === 'register') {
+                fetch('http://localhost:3000/send-otp-register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, mobile })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById('status').innerText = data.message;
+                        if (data.success) {
+                            document.getElementById('step1').style.display = 'none';
+                            document.getElementById('step2').style.display = 'block';
+                        }
+                    });
+            }
+        }
+
+        function verifyOTP() {
+            const mobile = document.getElementById('mobile').value;
+            const otp = document.getElementById('otp').value;
+
+            let url = '';
+
+            if (actionType === 'login') {
+                url = 'http://localhost:3000/verify-otp-login';
+            } else if (actionType === 'register') {
+                url = 'http://localhost:3000/verify-otp-register';
+            }
+
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mobile, otp })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('status').innerText = data.message;
+                    if (data.success) {
+                        localStorage.setItem('mobile', mobile);
+                        if (actionType === 'login') {
+                            localStorage.setItem('name', data.name);  // ✅ Save name at login
+                        } else if (actionType === 'register') {
+                            localStorage.setItem('name', document.getElementById('name').value);
+                        }
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1000);
+                    }
+                });
+
+        }
+
+
+    </script>
+
+</body>
+
+</html>

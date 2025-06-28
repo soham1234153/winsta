@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>realme NARZO 80 Pro 5G - ₹10 Entry</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #4b0000, #000000);
+            color: #FFD700;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            background-color: #1c1c1c;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            width: 90%;
+            max-width: 1000px;
+            flex-wrap: wrap;
+        }
+
+        .left {
+            flex: 1;
+            background-color: #000;
+            position: relative;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .left img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            object-position: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .right {
+            flex: 1;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right h2 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .right p {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pay-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .pay-button {
+            background-color: #32CD32;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .pay-button:hover {
+            background-color: #28a428;
+            transform: scale(1.05);
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 20px;
+            border: none;
+            width: 180px;
+            font-size: 14px;
+        }
+
+        button.submit-btn {
+    background-color: #FF8C00;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 100%;
+    max-width: 300px;
+}
+
+        button.submit-btn:hover {
+            background-color: #e67300;
+            transform: scale(1.05);
+        }
+
+        #status {
+            margin-top: 10px;
+            color: #FF6347;
+            font-size: 16px;
+        }
+
+        .user-info-banner {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #333;
+            color: #FFD700;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 9999;
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .popup-content {
+            background-color: #1c1c1c;
+            color: #FFD700;
+            padding: 30px 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.8);
+            max-width: 300px;
+            width: 90%;
+        }
+
+        .popup-content button {
+            background-color: #32CD32;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .popup-content button:hover {
+            background-color: #28a428;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="user-info-banner">
+        Logged in as: <span id="userName"></span>
+    </div>
+
+    <div class="container">
+        <div class="left">
+            <img src="https://i.postimg.cc/pLmXrsVm/1.png" alt="Product Image">
+        </div>
+
+        <div class="right">
+            <h2>Yamaha MT-15</h2>
+            <p>Entry Fee: ₹100</p>
+
+            <!-- Razorpay Link -->
+            <div class="pay-section">
+                <a href="https://rzp.io/rzp/5b98lK3K" target="_blank" class="pay-button">Pay Now</a>
+                <input type="text" id="txnId" placeholder="Enter 12 digit UTR number">
+            </div>
+            <button class="submit-btn" onclick="submitTxn()">Submit</button>
+            <p id="status"></p>
+        </div>
+    </div>
+
+    <!-- ✅ Success Popup Modal -->
+    <div id="successPopup" class="popup-overlay">
+        <div class="popup-content">
+            <h2>Congratulations! 🎉</h2>
+            <p>You are entered for the lucky draw!</p>
+            <button onclick="closePopup()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        const cardId = "Card3";
+        const mobile = localStorage.getItem('mobile');
+        const name = localStorage.getItem('name');
+
+        function submitTxn() {
+            const txnId = document.getElementById('txnId').value.trim();
+
+            if (!name || !mobile) {
+                document.getElementById('status').innerText = "⚠️ Please Login or Register first!";
+                return;
+            }
+
+            if (txnId.length < 10) {
+                document.getElementById('status').innerText = "⚠️ Please enter valid 12 digit UTR number.";
+                return;
+            }
+
+            fetch('http://localhost:3000/save-transaction', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, mobile, cardId, txnId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('status').innerText = data.message;
+                if (data.success) {
+                    showPopup();
+                }
+            })
+            .catch(err => {
+                document.getElementById('status').innerText = "❌ Error submitting transaction.";
+            });
+        }
+
+        function showPopup() {
+            document.getElementById('successPopup').style.display = 'flex';
+        }
+
+        function closePopup() {
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('userName').innerText = localStorage.getItem('name') || 'Guest';
+        });
+    </script>
+</body>
+
+</html>
